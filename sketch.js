@@ -13,6 +13,7 @@ var gameState = PLAY;
 var edge1,edge2;
 var obstacle;
 var res;
+var score=0;
 
 var bulen;
 var obstaclesGroup;
@@ -44,8 +45,8 @@ res=loadImage("images/re.png");
 function setup() {
   createCanvas(800,800);
  bg = createSprite(400,400,10,10);
- bg.addImage(back);
- bg.velocityY=3;
+
+
 
  bg.scale=5.0;
  mycar=createSprite(400,650,10,10);
@@ -67,7 +68,7 @@ buleGroup=new Group();
 
 re=createSprite(400,400,50,50);
 re.addImage(res);
-re.visible=false;
+
 
 
 
@@ -81,14 +82,18 @@ re.visible=false;
 function draw() {
 background("black");
 if(gameState===PLAY){
-
+  bg.addImage(back);
+  bg.velocityY=3;
+  re.visible=false;
+  mycar.visible=true;
+  
 
 if(bg.y>600){
   bg.y=100;
 }
 
 spawnObstacles();
-if(keyDown("space")){
+if(keyWentDown("space")){
   Bullet();
 }
 
@@ -108,7 +113,8 @@ if(keyDown("up_arrow")||keyDown("w")){
 }
 if(bulletGroup.isTouching(buleGroup)||bulletGroup.isTouching(obstaclesGroup)){
   obstacle.addImage(des);
-  obstaclesGroup.destroyEach();
+  obstaclesGroup[0].destroy;
+  score=score+1;
 }
 if(buleGroup.isTouching(mycar)){
   gameState=END;
@@ -130,17 +136,24 @@ if(buleGroup.isTouching(mycar)){
 
 bg.velocityY=0;
 bg.addImage(over);
+bg.scale= 4.5;  
 re.visible=true;  
 mycar.visible=false;
 obstaclesGroup.destroyEach();
-buleGroup.clear();
- 
+buleGroup.setVisibleEach(); 
+if(mousePressedOver(re)){
+  reset();
+
+}
 }
 
 
 
 
   drawSprites();
+ textSize(25);
+ fill("white");  
+ text("Car destroyed: "+score,550,50);
  
 }
 function spawnObstacles(){
@@ -188,5 +201,7 @@ function spawnObstacles(){
 
 
  }
+function reset(){
+gameState=PLAY;
 
- 
+} 
